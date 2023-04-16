@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "932526578346",
+    "firebase_url": "https://smart-grounds-default-rtdb.firebaseio.com",
+    "project_id": "smart-grounds",
+    "storage_bucket": "smart-grounds.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:932526578346:android:499b5b5ca9f58bcf17ced3",
+        "android_client_info": {
+          "package_name": "com.example.smart_grounds"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "932526578346-gnimqc0k778oqjoiq6h9jbi2sj1sqmtm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCrLZ8b6yRP8eZYeDg3aJTLREAv1Kp68k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "932526578346-gnimqc0k778oqjoiq6h9jbi2sj1sqmtm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

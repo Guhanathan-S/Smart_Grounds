@@ -1,0 +1,56 @@
+{
+    "users": [{
+            "email": "guhanathan.s.17@gmail.com",
+            "type": "Teacher",
+            "name": "Mcgrath"
+        },
+         {
+            "email": "11189m008@kanchiuniv.ac.in",
+            "type": "student",
+            "name": "Guhan"
+        }, {
+            "email": "11189m019@kanchiuniv.ac.in ",
+            " type ": " student ",
+            " name ": " Rajkamal "
+        }, {
+            " email ": " 11189a260 @ kanchiunv.ac.in ",
+            " type": "student",
+            "name": "venkatakrishnan"
+        }, {
+            "email": "11189a078@kanchiuniv.ac.in",
+            "type": "student",
+            "name": "Harisarathi"
+        }, {
+            "email": "11189a001@kanchiuniv.ac.in",
+            "type": "student",
+            "name": "Aakash"
+        }, {
+            "email": "11189a018@kanchiuniv.ac.in",
+            "type": "student",
+            "name": "Aravind"
+        }, {
+            "email": "11189a022@kanchiuniv.ac.in",
+            " type ": " student ",
+            " name": "Balamurugan"
+        }, {
+            "email": "11189a060@kanchiuniv.ac.in",
+            "type": "student",
+            "name": "Saipraneeth"
+        }, {
+            "email": "11189a211@kanchiuniv.ac.in",
+            "type": "student",
+            "name": "Santhosh"
+        }, {
+            "email": "11189a221@kanchiuniv.ac.in",
+            "type": "student",
+            "name": "siva"
+        }, {
+            "email": "11189a204@kanchiuniv.ac.in",
+            "type": "student",
+            "name": "saicharan"
+        }, {
+            "email": "11189a219@kanchiuniv.ac.in",
+            "type": "student",
+            "name": "Shyam"
+        } ]
+}

@@ -1,0 +1,33 @@
+{
+    "gym" :{
+            "light1" : 1,
+            "light2" : 0,
+            "light3" : 1,
+            "ac1" : 1,
+            "ac2" : 2,
+            "ac3" : 3
+        },
+    "cricket_ground" :{
+              "light1"  :1,
+              "light2" :0,
+              "light3" :0
+            },
+    "football_ground" :{
+        "light1" : 1,
+        "light2" : 1,
+        "light3" : 0,
+        "water_sprinklers" : 1
+    },
+    "basketball_court" :{
+        "light1" : 0,
+        "light2" : 1
+    },
+    "volleyball_court" :{
+        "light1" : 0,
+        "light2" : 1
+    },
+    "tennis_court" :{
+        "light1" : 0,
+        "light2" : 1
+    }
+}
