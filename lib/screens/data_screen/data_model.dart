@@ -12,21 +12,33 @@ class Data_Model {
 
 class UserData {
   UserData(
-      {this.id, this.date, this.inTime, this.outTime, this.calories, this.key});
+      {this.id,
+      this.date,
+      this.inTime,
+      this.outTime,
+      this.calories,
+      this.totCal,
+      this.key,
+      this.time});
   String? id;
   String? date;
   String? inTime;
   String? outTime;
-  String? calories;
+  int? calories;
+  int? totCal;
   String? key;
+  String? time;
 
   factory UserData.fromJson(json) {
     return UserData(
-        id: json[0]['id'],
-        date: json[0]['date'],
-        inTime: json[0]['in_time'],
-        outTime: json[0]['out_time'],
-        calories: json[0]['calories'],
-        key: json[1]);
+      id: json[0]['id'],
+      date: json[0]['date'],
+      inTime: json[0]['in_time'],
+      outTime: json[0]['out_time'],
+      calories: json[0]['calories'],
+      totCal: json[0]['totCal'],
+      time: json[0]['time'],
+      key: json[1],
+    );
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_grounds/database/database.dart';
+import 'package:smart_grounds/screens/constants.dart';
 
 class AddEvents extends StatefulWidget {
   const AddEvents({Key? key}) : super(key: key);
@@ -25,256 +27,451 @@ class _AddEventsState extends State<AddEvents> {
   DataBase dataBase = DataBase();
   InputDecoration inputDecoration(String hint) {
     return InputDecoration(
-        hintText: hint,
-        focusedBorder:
-            OutlineInputBorder(borderSide: BorderSide(color: Colors.cyan)),
-        border: OutlineInputBorder(borderSide: BorderSide(color: Colors.cyan)),
-        enabledBorder:
-            OutlineInputBorder(borderSide: BorderSide(color: Colors.cyan)));
+        labelText: hint,
+        labelStyle: TextStyle(color: primaryColor1),
+        focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: primaryColor1,
+            ),
+            borderRadius: BorderRadius.circular(20)),
+        enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: primaryColor1),
+            borderRadius: BorderRadius.circular(20)));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Add Events"),
-        backgroundColor: Colors.cyan,
-      ),
-      body: Stack(children: [
-        SingleChildScrollView(
-          child: Container(
-            margin: EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 40,
-                ),
-                fields("Event Name", eventNameController),
-                fields("Organizer", organizerController),
-                fields("Team 1 Name", team1Controller),
-                fields("Team 2 Name", team2Controller),
-                fields("Place", placeController),
+      body: SafeArea(
+        child: Stack(children: [
+          Container(
+            color: primaryGreen,
+            height: devHeight,
+            padding: EdgeInsets.only(top: devHeight / 6, right: 10, left: 10),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 40,
+                  ),
+                  fields("Event Name", eventNameController),
+                  fields("Organizer", organizerController),
+                  fields("Team 1 Name", team1Controller),
+                  fields("Team 2 Name", team2Controller),
+                  fields("Place", placeController),
 
-                /// Date
-                GestureDetector(
-                    onTap: () {
-                      buildMaterialDatePicker(context);
-                    },
-                    child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.cyan)),
-                        child: Row(children: [
-                          IconButton(
-                            onPressed: () {
-                              buildMaterialDatePicker(context);
-                            },
-                            icon: Icon(Icons.calendar_today_outlined,
-                                color: Colors.cyan),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Text(
-                            "${selectedEventDate!.toLocal()}".split(" ")[0],
-                          )
-                        ]))),
-
-                SizedBox(
-                  height: 20,
-                ),
-
-                /// Start Time
-                Row(
-                  children: [
-                    Text(
-                      "Start Time",
-                      style: TextStyle(color: Colors.cyan, fontSize: 20),
-                    ),
-                    Spacer(),
-                    GestureDetector(
+                  /// Date
+                  GestureDetector(
                       onTap: () {
-                        _selectStartTime(context);
+                        buildMaterialDatePicker(context);
                       },
                       child: Container(
-                        height: 60,
-                        width: 80,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: Colors.cyan, width: 3)),
-                        child: Text(
-                          selectedStartTime,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: primaryColor1)),
+                          child: Row(children: [
+                            IconButton(
+                              onPressed: () {
+                                buildMaterialDatePicker(context);
+                              },
+                              icon: Icon(Icons.calendar_today_outlined,
+                                  color: primaryColor1),
+                            ),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Text(
+                              "${selectedEventDate!.toLocal()}".split(" ")[0],
+                            )
+                          ]))),
+
+                  SizedBox(
+                    height: 20,
+                  ),
+
+                  Text(
+                    'Event Timings',
+                    style: GoogleFonts.alexandria(
+                        color: primaryColor1, fontSize: 25),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+
+                  /// Start Time
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          _selectStartTime(context);
+                        },
+                        child: Container(
+                          height: 60,
+                          width: 120,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              border: Border.all(color: primaryColor1)),
+                          child: Text(
+                            selectedStartTime,
+                            style: TextStyle(
+                                color: primaryColor1,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600),
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 200,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-
-                /// End Time
-                Row(
-                  children: [
-                    Text(
-                      "End Time",
-                      style: TextStyle(color: Colors.cyan, fontSize: 20),
-                    ),
-                    Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        _selectEndTime(context);
-                      },
-                      child: Container(
-                        height: 60,
-                        width: 80,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: Colors.cyan, width: 3)),
-                        child: Text(
-                          selectedEndTime,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Text(
+                        '-',
+                        style: TextStyle(color: primaryColor1, fontSize: 50),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          _selectEndTime(context);
+                        },
+                        child: Container(
+                          height: 60,
+                          width: 120,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              border: Border.all(color: primaryColor1)),
+                          child: Text(
+                            selectedEndTime,
+                            style: TextStyle(
+                                color: primaryColor1,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600),
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 200,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 20,
-                ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
 
-                /// Add Button
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: SizedBox(
-                    height: 50,
-                    width: 120,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            submiting = true;
-                          });
-                          dataBase
-                              .addEvent(
-                            eventName: eventNameController.text,
-                            organizer: organizerController.text,
-                            team1: team1Controller.text,
-                            team2: team2Controller.text,
-                            place: placeController.text,
-                            date: selectedEventDate!
-                                .toLocal()
-                                .toString()
-                                .split(" ")[0],
-                            startTime: selectedStartTime,
-                            endTime: selectedEndTime,
-                          )
-                              .then((value) {
-                            Future.delayed(Duration(seconds: 2)).then((value) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text("Event Added Successfully"),
-                                backgroundColor: Colors.black,
-                                duration: Duration(seconds: 2),
-                              ));
+                  /// Add Button
+                  Align(
+                    alignment: Alignment.center,
+                    child: SizedBox(
+                      height: 50,
+                      width: devWidth - devWidth * (20 / 100),
+                      child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              submiting = true;
+                            });
+                            dataBase
+                                .addEvent(
+                              eventName: eventNameController.text,
+                              organizer: organizerController.text,
+                              team1: team1Controller.text,
+                              team2: team2Controller.text,
+                              place: placeController.text,
+                              date: selectedEventDate!
+                                  .toLocal()
+                                  .toString()
+                                  .split(" ")[0],
+                              startTime: selectedStartTime,
+                              endTime: selectedEndTime,
+                            )
+                                .then((value) {
+                              Future.delayed(Duration(seconds: 2))
+                                  .then((value) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text("Event Added Successfully"),
+                                  backgroundColor: Colors.black,
+                                  duration: Duration(seconds: 2),
+                                ));
+                                setState(() {
+                                  submiting = false;
+                                });
+                                Navigator.pop(context);
+                              });
+                            }).catchError((e) {
                               setState(() {
                                 submiting = false;
                               });
-                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content:
+                                    Text("There is an Error in Adding Event"),
+                                backgroundColor: Colors.cyan,
+                                duration: Duration(seconds: 2),
+                              ));
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text(
+                                  "Try agian later",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                backgroundColor: Colors.black,
+                                duration: Duration(seconds: 1),
+                              ));
                             });
-                          }).catchError((e) {
-                            setState(() {
-                              submiting = false;
-                            });
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content:
-                                  Text("There is an Error in Adding Event"),
-                              backgroundColor: Colors.cyan,
-                              duration: Duration(seconds: 2),
-                            ));
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(
-                                "Try agian later",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              backgroundColor: Colors.black,
-                              duration: Duration(seconds: 1),
-                            ));
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                            primary: Colors.cyan,
-                            elevation: 10,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20))),
-                        child: Text(
-                          "ADD",
-                          style: TextStyle(fontSize: 25),
-                        )),
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: primaryColor1,
+                              elevation: 10,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20))),
+                          child: Text(
+                            "ADD",
+                            style: TextStyle(fontSize: 25, color: primaryGreen),
+                          )),
+                    ),
                   ),
-                )
-              ],
+                  SizedBox(
+                    height: 10,
+                  )
+                ],
+              ),
             ),
           ),
-        ),
-        if (submiting)
-          Container(
-            height: double.infinity,
-            width: double.infinity,
-            color: Colors.black38,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Adding Event"),
-                SizedBox(
-                  height: 5,
-                ),
-                CircularProgressIndicator()
-              ],
+          ClipPath(
+            clipper: TopClipperConst(),
+            child: Container(
+              alignment: Alignment.topLeft,
+              padding: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
+              decoration: BoxDecoration(color: primaryColor1),
+              child: Text(
+                'Add Events',
+                style: TextStyle(color: primaryGreen, fontSize: 35),
+              ),
             ),
-          )
-      ]),
+          ),
+          // SingleChildScrollView(
+          //   child: Container(
+          //     margin: EdgeInsets.all(10),
+          //     child: Column(
+          //       crossAxisAlignment: CrossAxisAlignment.start,
+          //       children: [
+          //         SizedBox(
+          //           height: 40,
+          //         ),
+          //         fields("Event Name", eventNameController),
+          //         fields("Organizer", organizerController),
+          //         fields("Team 1 Name", team1Controller),
+          //         fields("Team 2 Name", team2Controller),
+          //         fields("Place", placeController),
+
+          //         /// Date
+          //         GestureDetector(
+          //             onTap: () {
+          //               buildMaterialDatePicker(context);
+          //             },
+          //             child: Container(
+          //                 decoration: BoxDecoration(
+          //                     borderRadius: BorderRadius.circular(10),
+          //                     border: Border.all(color: Colors.cyan)),
+          //                 child: Row(children: [
+          //                   IconButton(
+          //                     onPressed: () {
+          //                       buildMaterialDatePicker(context);
+          //                     },
+          //                     icon: Icon(Icons.calendar_today_outlined,
+          //                         color: Colors.cyan),
+          //                   ),
+          //                   SizedBox(
+          //                     width: 15,
+          //                   ),
+          //                   Text(
+          //                     "${selectedEventDate!.toLocal()}".split(" ")[0],
+          //                   )
+          //                 ]))),
+
+          //         SizedBox(
+          //           height: 20,
+          //         ),
+
+          //         /// Start Time
+          //         Row(
+          //           children: [
+          //             Text(
+          //               "Start Time",
+          //               style: TextStyle(color: Colors.cyan, fontSize: 20),
+          //             ),
+          //             Spacer(),
+          //             GestureDetector(
+          //               onTap: () {
+          //                 _selectStartTime(context);
+          //               },
+          //               child: Container(
+          //                 height: 60,
+          //                 width: 80,
+          //                 alignment: Alignment.center,
+          //                 decoration: BoxDecoration(
+          //                     borderRadius: BorderRadius.circular(5),
+          //                     border: Border.all(color: Colors.cyan, width: 3)),
+          //                 child: Text(
+          //                   selectedStartTime,
+          //                   style: TextStyle(
+          //                       color: Colors.black,
+          //                       fontSize: 18,
+          //                       fontWeight: FontWeight.w600),
+          //                 ),
+          //               ),
+          //             ),
+          //             SizedBox(
+          //               width: 200,
+          //             ),
+          //           ],
+          //         ),
+          //         SizedBox(
+          //           height: 20,
+          //         ),
+
+          //         /// End Time
+          //         Row(
+          //           children: [
+          //             Text(
+          //               "End Time",
+          //               style: TextStyle(color: Colors.cyan, fontSize: 20),
+          //             ),
+          //             Spacer(),
+          //             GestureDetector(
+          //               onTap: () {
+          //                 _selectEndTime(context);
+          //               },
+          //               child: Container(
+          //                 height: 60,
+          //                 width: 80,
+          //                 alignment: Alignment.center,
+          //                 decoration: BoxDecoration(
+          //                     borderRadius: BorderRadius.circular(5),
+          //                     border: Border.all(color: Colors.cyan, width: 3)),
+          //                 child: Text(
+          //                   selectedEndTime,
+          //                   style: TextStyle(
+          //                       color: Colors.black,
+          //                       fontSize: 18,
+          //                       fontWeight: FontWeight.w600),
+          //                 ),
+          //               ),
+          //             ),
+          //             SizedBox(
+          //               width: 200,
+          //             ),
+          //           ],
+          //         ),
+          //         SizedBox(
+          //           height: 20,
+          //         ),
+
+          //         /// Add Button
+          //         Align(
+          //           alignment: Alignment.bottomRight,
+          //           child: SizedBox(
+          //             height: 50,
+          //             width: 120,
+          //             child: ElevatedButton(
+          //                 onPressed: () {
+          //                   setState(() {
+          //                     submiting = true;
+          //                   });
+          //                   dataBase
+          //                       .addEvent(
+          //                     eventName: eventNameController.text,
+          //                     organizer: organizerController.text,
+          //                     team1: team1Controller.text,
+          //                     team2: team2Controller.text,
+          //                     place: placeController.text,
+          //                     date: selectedEventDate!
+          //                         .toLocal()
+          //                         .toString()
+          //                         .split(" ")[0],
+          //                     startTime: selectedStartTime,
+          //                     endTime: selectedEndTime,
+          //                   )
+          //                       .then((value) {
+          //                     Future.delayed(Duration(seconds: 2))
+          //                         .then((value) {
+          //                       ScaffoldMessenger.of(context)
+          //                           .showSnackBar(SnackBar(
+          //                         content: Text("Event Added Successfully"),
+          //                         backgroundColor: Colors.black,
+          //                         duration: Duration(seconds: 2),
+          //                       ));
+          //                       setState(() {
+          //                         submiting = false;
+          //                       });
+          //                       Navigator.pop(context);
+          //                     });
+          //                   }).catchError((e) {
+          //                     setState(() {
+          //                       submiting = false;
+          //                     });
+          //                     ScaffoldMessenger.of(context)
+          //                         .showSnackBar(SnackBar(
+          //                       content:
+          //                           Text("There is an Error in Adding Event"),
+          //                       backgroundColor: Colors.cyan,
+          //                       duration: Duration(seconds: 2),
+          //                     ));
+          //                     ScaffoldMessenger.of(context)
+          //                         .showSnackBar(SnackBar(
+          //                       content: Text(
+          //                         "Try agian later",
+          //                         style: TextStyle(color: Colors.white),
+          //                       ),
+          //                       backgroundColor: Colors.black,
+          //                       duration: Duration(seconds: 1),
+          //                     ));
+          //                   });
+          //                 },
+          //                 style: ElevatedButton.styleFrom(
+          //                     backgroundColor: Colors.cyan,
+          //                     elevation: 10,
+          //                     shape: RoundedRectangleBorder(
+          //                         borderRadius: BorderRadius.circular(20))),
+          //                 child: Text(
+          //                   "ADD",
+          //                   style: TextStyle(fontSize: 25),
+          //                 )),
+          //           ),
+          //         )
+          //       ],
+          //     ),
+          //   ),
+          // ),
+          if (submiting)
+            Container(
+              height: double.infinity,
+              width: double.infinity,
+              color: Colors.black38,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Adding Event"),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  CircularProgressIndicator()
+                ],
+              ),
+            )
+        ]),
+      ),
     );
   }
 
   Widget fields(text, controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          child: Text(
-            text,
-            style: TextStyle(fontSize: 20, color: Colors.cyan),
-          ),
-        ),
-        SizedBox(
-          height: 5,
-        ),
-        TextFormField(
-          controller: controller,
-          maxLength: 30,
-          decoration: inputDecoration(text),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-      ],
+    return TextFormField(
+      controller: controller,
+      maxLength: 30,
+      cursorColor: primaryColor1,
+      decoration: inputDecoration(text),
     );
   }
 
@@ -284,7 +481,7 @@ class _AddEventsState extends State<AddEvents> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedEventDate!,
-      firstDate: DateTime(2010),
+      firstDate: DateTime.now(),
       lastDate: DateTime(2025),
       initialEntryMode: DatePickerEntryMode.calendar,
       initialDatePickerMode: DatePickerMode.day,
@@ -297,7 +494,23 @@ class _AddEventsState extends State<AddEvents> {
       fieldHintText: 'Month/Date/Year',
       builder: (context, child) {
         return Theme(
-          data: ThemeData.light(),
+          data: ThemeData.light().copyWith(
+              dialogTheme: DialogTheme(
+                  backgroundColor: primaryGreen,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25))),
+              colorScheme: ColorScheme(
+                  brightness: Brightness.light,
+                  primary: primaryColor1,
+                  onPrimary: primaryGreen,
+                  secondary: primaryColor2,
+                  onSecondary: primaryColor2,
+                  error: Colors.red,
+                  onError: Colors.red,
+                  background: primaryGreen,
+                  onBackground: primaryGreen,
+                  surface: primaryColor3,
+                  onSurface: primaryColor3)),
           child: child!,
         );
       },
@@ -308,13 +521,51 @@ class _AddEventsState extends State<AddEvents> {
       });
   }
 
+  final theme = ThemeData.dark().copyWith(
+    timePickerTheme: TimePickerThemeData(
+        backgroundColor: primaryGreen,
+        dayPeriodShape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        hourMinuteShape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+        inputDecorationTheme: InputDecorationTheme(
+            enabledBorder:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
+            focusedBorder:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(25))),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+        hourMinuteColor: primaryColor3,
+        hourMinuteTextStyle: TextStyle(color: primaryColor1, fontSize: 40),
+        hourMinuteTextColor: whiteColor,
+        dialHandColor: primaryGreen,
+        dialBackgroundColor: primaryColor1,
+        dialTextColor: MaterialStateColor.resolveWith((states) =>
+            states.contains(MaterialState.selected)
+                ? whiteColor
+                : primaryGreen),
+        entryModeIconColor: Colors.transparent),
+    textTheme: TextTheme(
+      // titleLarge: TextStyle(color: primaryColor1, fontSize: 20),
+      labelSmall: TextStyle(color: primaryColor1, fontSize: 20),
+    ),
+    textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+      backgroundColor:
+          MaterialStateColor.resolveWith((states) => primaryColor3),
+      foregroundColor: MaterialStateColor.resolveWith((states) => primaryGreen),
+      overlayColor: MaterialStateColor.resolveWith((states) => whiteColor),
+    )),
+  );
+
   /// start time picker
 
   Future<Null> _selectStartTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: selectedTime,
-    );
+        context: context,
+        initialTime: selectedTime,
+        builder: (context, child) {
+          return Theme(data: theme, child: child!);
+        });
     if (picked != null)
       setState(() {
         selectedTime = picked;
@@ -331,9 +582,11 @@ class _AddEventsState extends State<AddEvents> {
   /// end time picker
   Future<Null> _selectEndTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: selectedTime,
-    );
+        context: context,
+        initialTime: selectedTime,
+        builder: (context, child) {
+          return Theme(data: theme, child: child!);
+        });
     if (picked != null)
       setState(() {
         selectedTime = picked;

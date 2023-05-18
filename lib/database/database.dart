@@ -1,16 +1,28 @@
+import 'dart:math';
+
 import 'package:firebase_database/firebase_database.dart';
+import 'package:smart_grounds/screens/bookings/booking_model.dart';
+
+import '../screens/event_screen/eventDataModel.dart';
 
 class DataBase {
   DatabaseReference database = FirebaseDatabase.instance.ref();
 
   /// Add Gym Record
   Future<void> addGymReocrd(
-      {name, date, condition, image, onSuccess, onError}) async {
+      {String? name,
+      String? date,
+      // int? condition,
+      String? image,
+      int? count,
+      onSuccess,
+      onError}) async {
     var gymData = database.child('records/gym_equipments');
     gymData.push().set({
       "equipment_name": name,
       "installed_date": date,
-      "condition": condition,
+      // "condition": condition,
+      "count": count,
       "image": image
     }).then((value) {
       Future.delayed(Duration(seconds: 2)).then((value) => onSuccess());
@@ -77,6 +89,40 @@ class DataBase {
       "booked_date": date,
       "start_time": startTime,
       "end_time": endTime,
+    });
+  }
+
+  /// Remove Booked Grounds
+  Future<void> removeBookedGround(sportName) async {
+    database.child('booking/$sportName').onValue.forEach((element) {
+      element.snapshot.children.forEach((element) {
+        var data = BookingData.fromJson(element.value);
+        DateTime eventTime = DateTime.parse(data.bookedDate.toString() +
+            "${data.endTime!.split(" ")[1] == "AM" && (data.endTime!.split(":")[0].substring(0, 1) == '0') ? " 0" : " "}" +
+            "${(int.parse(data.endTime!.split(":")[0]) + (data.endTime!.split(" ")[1] == "PM" ? 12 : 0)).toString()}:${data.endTime!.split(" ")[0].split(":")[1]}");
+        if (DateTime.now().isAfter(eventTime)) {
+          database.child('booking/$sportName/${element.key}').remove();
+        }
+      });
+    });
+  }
+
+  /// Remove Old Events
+  Future<void> removeOldEvent() async {
+    database.child('events').onValue.forEach((element) {
+      List<EventData> event =
+          EventModel.fromJson(element.snapshot.value).eventData!;
+      event.forEach((data) {
+        DateTime eventTime = DateTime.parse(data.date.toString() +
+            "${data.endTime!.split(" ")[1] == "AM" && (data.endTime!.split(":")[0].substring(0, 1) == '0') ? " 0" : " "}" +
+            "${(int.parse(data.endTime!.split(":")[0]) + (data.endTime!.split(" ")[1] == "PM" ? 12 : 0)).toString()}:${data.endTime!.split(" ")[0].split(":")[1]}");
+
+        bool isAvailable =
+            DateTime.now().subtract(Duration(days: 7)).isAfter(eventTime);
+        if (isAvailable) {
+          database.child('events/${data.eventId}').remove();
+        }
+      });
     });
   }
 }

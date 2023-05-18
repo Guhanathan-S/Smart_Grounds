@@ -3,11 +3,15 @@ class EventModel {
   List<EventData>? eventData;
 
   factory EventModel.fromJson(json) {
-    List js = List.generate(json.keys.toList().length,
-        (index) => [json.keys.toList()[index], json.values.toList()[index]]);
-    return EventModel(
-        eventData:
-            List<EventData>.from(js.map((json) => EventData.fromJson(json))));
+    try {
+      List js = List.generate(json.keys.toList().length,
+          (index) => [json.keys.toList()[index], json.values.toList()[index]]);
+      return EventModel(
+          eventData:
+              List<EventData>.from(js.map((json) => EventData.fromJson(json))));
+    } catch (e) {
+      return EventModel(eventData: []);
+    }
   }
 }
 

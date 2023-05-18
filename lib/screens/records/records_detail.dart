@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_grounds/screens/constants.dart';
 
 class RecordDetails extends StatefulWidget {
   final data;
@@ -11,12 +12,19 @@ class RecordDetails extends StatefulWidget {
 }
 
 class _RecordDetailsState extends State<RecordDetails> {
+  late List<bool> imageLoaded;
+  @override
+  void initState() {
+    imageLoaded = List.generate(widget.data.length, (index) => false);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: primaryColor3,
         appBar: AppBar(
-          title: Text(widget.Category!),
-        ),
+            title: Text(widget.Category!), backgroundColor: primaryGreen),
         body: SafeArea(
             child: Container(
                 margin: EdgeInsets.all(10),
@@ -28,8 +36,19 @@ class _RecordDetailsState extends State<RecordDetails> {
                         mainAxisSpacing: 10,
                         crossAxisSpacing: 10),
                     itemBuilder: (context, index) {
+                      precacheImage(
+                              NetworkImage(widget.data[index].image != null
+                                  ? widget.data[index].image!
+                                  : "https://i.imgur.com/sUFH1Aq.png"),
+                              context)
+                          .then((_) {
+                        setState(() {
+                          imageLoaded[index] = true;
+                        });
+                      });
                       return Material(
                         elevation: 10,
+                        color: primaryGreen,
                         borderRadius: BorderRadius.circular(15),
                         child: Container(
                           padding: EdgeInsets.all(5),
@@ -42,30 +61,40 @@ class _RecordDetailsState extends State<RecordDetails> {
                               Container(
                                 height: 150,
                                 width: 190,
-                                padding: EdgeInsets.all(5),
+                                clipBehavior: Clip.antiAlias,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    image: DecorationImage(
-                                        image: NetworkImage(
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: imageLoaded[index]
+                                    ? FittedBox(
+                                        fit: BoxFit.fill,
+                                        child: Image.network(
                                           widget.data[index].image != null
                                               ? widget.data[index].image!
                                               : "https://i.imgur.com/sUFH1Aq.png",
                                         ),
-                                        fit: BoxFit.fill)),
+                                      )
+                                    : Center(
+                                        child: CircularProgressIndicator(
+                                          color: primaryColor1,
+                                        ),
+                                      ),
+                              ),
+                              SizedBox(
+                                height: 5,
                               ),
                               if (widget.Category == 'Gym')
                                 Center(
                                     child: Text(
                                   widget.data[index].equipmentName,
                                   style: GoogleFonts.zillaSlab(
-                                      fontSize: 18, color: Colors.black),
+                                      fontSize: 18, color: primaryColor1),
                                 )),
                               if (widget.Category != 'Gym')
                                 Center(
                                   child: Text(
                                     widget.data[index].itemName,
                                     style: GoogleFonts.zillaSlab(
-                                        fontSize: 18, color: Colors.black),
+                                        fontSize: 18, color: primaryColor1),
                                   ),
                                 ),
                               if (widget.Category == 'Gym') ...[
@@ -100,14 +129,14 @@ class _RecordDetailsState extends State<RecordDetails> {
           children: [
             Text(
               title,
-              style: TextStyle(fontSize: 18, color: Colors.grey[700]),
+              style: TextStyle(fontSize: 18, color: primaryColor1),
             ),
             SizedBox(
               width: 10,
             ),
             Text(
               ": $data",
-              style: GoogleFonts.zillaSlab(fontSize: 18, color: Colors.black),
+              style: GoogleFonts.zillaSlab(fontSize: 18, color: primaryColor1),
             ),
           ],
         ),

@@ -5,9 +5,13 @@ class UserDataBase {
   UserDataBase({this.uid});
 
   CollectionReference users = FirebaseFirestore.instance.collection('users');
-  Future createUserData(String name, String type, String registerId, weight,
-      {String? number}) async {
-    if (type == 'others')
+  Future createUserData(
+      {String? name,
+      String? type,
+      String? registerId,
+      int? weight,
+      String? number}) async {
+    if (type!.toLowerCase() == 'others')
       return await users.doc(uid).set({
         'name': name,
         'type': type,
