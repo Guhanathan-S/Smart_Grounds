@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_grounds/database/database.dart';
 import 'package:smart_grounds/screens/constants.dart';
@@ -24,17 +22,6 @@ class _EventDataScreenState extends State<EventDataScreen> {
   List<EventData> events = [];
   FirebaseDatabase database = FirebaseDatabase.instanceFor(app: Firebase.app());
   Stream<DatabaseEvent>? _dataBaseEvents;
-
-  // getData() {
-  //   events.clear();
-  //   _dataBaseEvents = database.ref().child('events').onValue.listen((event) {
-  //     var eventMap = event.snapshot.value;
-  //     var data = EventModel.fromJson(event.snapshot.value);
-  //     events = data.eventData!;
-  //     setState(() {});
-  //   });
-  // }
-
   bool updateEvent = false;
   DateTime dateTime = DateTime.now();
   String team1 = "";
@@ -42,19 +29,12 @@ class _EventDataScreenState extends State<EventDataScreen> {
   String id = "";
   @override
   void initState() {
-    // getData();
     DataBase().removeOldEvent();
     super.initState();
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    print(widget.type);
     return WillPopScope(
       onWillPop: () async {
         VisibleScaffoldWidgets().changeVisibleState(state: true);
@@ -213,105 +193,6 @@ class _EventDataScreenState extends State<EventDataScreen> {
     );
   }
 }
-
-// class DetailBottomSheet extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-//       child: Stack(
-//         alignment: Alignment.center,
-//         children: [
-//           Align(
-//             alignment: Alignment.center,
-//             child: CircleAvatar(
-//               child: Image(
-//                 image: AssetImage('assets/volleyball-player.png'),
-//                 color: primaryColor1,
-//               ),
-//               backgroundColor: primaryGreen,
-//               radius: 100,
-//             ),
-//           ),
-//           Positioned(
-//             bottom: 30,
-//             right: 0,
-//             child: Column(
-//               // crossAxisAlignment: CrossAxisAlignment.end,
-//               children: [
-//                 Text('TextData 2',
-//                     style: GoogleFonts.ralewayDots(
-//                         fontWeight: FontWeight.w600,
-//                         color: whiteColor,
-//                         fontSize: 25)),
-//                 SizedBox(
-//                   height: 10,
-//                 ),
-//                 Text('Score 2',
-//                     style: GoogleFonts.ralewayDots(
-//                         fontWeight: FontWeight.w600,
-//                         color: whiteColor,
-//                         fontSize: 25))
-//               ],
-//             ),
-//           ),
-//           Positioned(
-//             left: 0,
-//             top: 30,
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Text('TextData 1',
-//                     style: GoogleFonts.ralewayDots(
-//                         fontWeight: FontWeight.w600,
-//                         color: whiteColor,
-//                         fontSize: 25)),
-//                 SizedBox(
-//                   height: 10,
-//                 ),
-//                 Text('Score 1',
-//                     style: GoogleFonts.ralewayDots(
-//                         fontWeight: FontWeight.w600,
-//                         color: whiteColor,
-//                         fontSize: 25))
-//               ],
-//             ),
-//           ),
-//           Align(
-//             alignment: Alignment.topRight,
-//             child: Column(
-//               children: [
-//                 Text(
-//                   'Date',
-//                   style: GoogleFonts.ralewayDots(
-//                       fontWeight: FontWeight.w600,
-//                       color: whiteColor,
-//                       fontSize: 20),
-//                 ),
-//                 SizedBox(
-//                   height: 10,
-//                 ),
-//                 Text('Time',
-//                     style: GoogleFonts.ralewayDots(
-//                         fontWeight: FontWeight.w600,
-//                         color: whiteColor,
-//                         fontSize: 20))
-//               ],
-//             ),
-//           ),
-//           Align(
-//             alignment: Alignment.bottomLeft,
-//             child: Text(
-//               'Results need to be updated',
-//               style: GoogleFonts.ralewayDots(
-//                   fontWeight: FontWeight.w600, color: whiteColor, fontSize: 20),
-//             ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }
 
 class BottomSheetData extends StatelessWidget {
   BottomSheetData({required this.eventData, required this.type});

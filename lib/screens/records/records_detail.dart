@@ -4,8 +4,8 @@ import 'package:smart_grounds/screens/constants.dart';
 
 class RecordDetails extends StatefulWidget {
   final data;
-  String? Category;
-  RecordDetails({@required this.data, @required this.Category});
+  final String? category;
+  RecordDetails({required this.data, required this.category});
 
   @override
   _RecordDetailsState createState() => _RecordDetailsState();
@@ -24,7 +24,7 @@ class _RecordDetailsState extends State<RecordDetails> {
     return Scaffold(
         backgroundColor: primaryColor3,
         appBar: AppBar(
-            title: Text(widget.Category!), backgroundColor: primaryGreen),
+            title: Text(widget.category!), backgroundColor: primaryGreen),
         body: SafeArea(
             child: Container(
                 margin: EdgeInsets.all(10),
@@ -82,14 +82,14 @@ class _RecordDetailsState extends State<RecordDetails> {
                               SizedBox(
                                 height: 5,
                               ),
-                              if (widget.Category == 'Gym')
+                              if (widget.category == 'Gym')
                                 Center(
                                     child: Text(
                                   widget.data[index].equipmentName,
                                   style: GoogleFonts.zillaSlab(
                                       fontSize: 18, color: primaryColor1),
                                 )),
-                              if (widget.Category != 'Gym')
+                              if (widget.category != 'Gym')
                                 Center(
                                   child: Text(
                                     widget.data[index].itemName,
@@ -97,7 +97,7 @@ class _RecordDetailsState extends State<RecordDetails> {
                                         fontSize: 18, color: primaryColor1),
                                   ),
                                 ),
-                              if (widget.Category == 'Gym') ...[
+                              if (widget.category == 'Gym') ...[
                                 row("Date", widget.data[index].installedDate),
                                 row(
                                     "Condition",
@@ -105,7 +105,7 @@ class _RecordDetailsState extends State<RecordDetails> {
                                         ? "Accessible"
                                         : "Under Service"),
                               ],
-                              if (widget.Category != 'Gym') ...[
+                              if (widget.category != 'Gym') ...[
                                 row('Total', widget.data[index].itemCount),
                                 row(
                                     'Purchased',

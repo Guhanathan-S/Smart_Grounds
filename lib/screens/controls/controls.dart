@@ -1,5 +1,5 @@
-import 'dart:async';
 import 'dart:math';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -14,30 +14,21 @@ class Controls extends StatefulWidget {
   _ControlsState createState() => _ControlsState();
 }
 
+List<bool> expands = [];
+
 class _ControlsState extends State<Controls> {
   var switchs;
   FirebaseDatabase database = FirebaseDatabase.instanceFor(app: Firebase.app());
-  List<bool> expands = [];
   List<Switches> switchList = [];
   List<String> switchArea = [];
-  // getData() async {
-  //   _controlStream =
-  //       database.ref().child('controls/gym/light_one').onValue.listen((event) {
-  //     var recivedData = event.snapshot.value;
-  //     switchs = recivedData;
-  //     setState(() {});
-  //   });
-  // }
 
   @override
   void initState() {
-    // getData();
     super.initState();
   }
 
   @override
   void dispose() {
-    // _controlStream!.cancel();
     super.dispose();
   }
 
@@ -69,7 +60,15 @@ class _ControlsState extends State<Controls> {
                 Controls_Model.fromJson(snapShot.data!.snapshot.value).areaId!);
             switchList.addAll(
                 Controls_Model.fromJson(snapShot.data!.snapshot.value).area!);
-            expands = List.generate(switchArea.length, (index) => false);
+            List<bool> temp = expands.toList();
+            expands.clear();
+            expands = List.generate(switchArea.length, (index) {
+              try {
+                return temp[index];
+              } catch (e) {
+                return false;
+              }
+            });
             return ListView.separated(
               separatorBuilder: (context, index) {
                 return SizedBox(
@@ -82,7 +81,6 @@ class _ControlsState extends State<Controls> {
                   index: index,
                   switchArea: switchArea[index],
                   switchList: switchList,
-                  expands: expands[index],
                 );
               },
             );
@@ -93,11 +91,9 @@ class _ControlsState extends State<Controls> {
 
 class ControlsCard extends StatefulWidget {
   ControlsCard(
-      {required this.expands,
-      required this.switchList,
+      {required this.switchList,
       required this.switchArea,
       required this.index});
-  bool expands;
   List<Switches> switchList;
   String switchArea;
   int index;
@@ -116,7 +112,7 @@ class _ControlsCardState extends State<ControlsCard> {
       child: ExpansionPanelList(
         dividerColor: primaryColor1,
         expansionCallback: (int index, bool expanded) {
-          setState(() => widget.expands = !expanded);
+          setState(() => expands[widget.index] = !expanded);
         },
         children: [
           ExpansionPanel(
@@ -137,7 +133,7 @@ class _ControlsCardState extends State<ControlsCard> {
                   iconColor: primaryColor1,
                 );
               },
-              isExpanded: widget.expands,
+              isExpanded: expands[widget.index],
               body: ListView.builder(
                   shrinkWrap: true,
                   itemCount:

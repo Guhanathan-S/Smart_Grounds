@@ -2,9 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_grounds/screens/constants.dart';
 
@@ -161,12 +159,6 @@ class _CalorisCalState extends State<CalorisCal> {
                                     .update({
                                   'totCal': int.parse(totCalController.text)
                                 });
-                                // await firestore
-                                //     .collection('users')
-                                //     .doc(auth.currentUser!.uid)
-                                //     .update({
-                                //   'totCal': int.parse(totCalController.text)
-                                // });
                                 setState(() {
                                   calVisible = false;
                                 });
@@ -187,34 +179,6 @@ class _CalorisCalState extends State<CalorisCal> {
                                   setState(() {
                                     selectedWorkout = value;
                                   });
-                                  // showMenu<String>(
-                                  //         context: context,
-                                  //         color: primaryColor1,
-                                  //         shape: RoundedRectangleBorder(
-                                  //             borderRadius:
-                                  //                 BorderRadius.circular(20)),
-                                  //         position: RelativeRect.fromSize(
-                                  //             Rect.zero, Size(70, 200)),
-                                  //         // fromLTRB(
-                                  //         //     0,0,0, 0),
-                                  //         items: workoutsName
-                                  //             .map<PopupMenuEntry<String>>(
-                                  //                 (e) => PopupMenuItem<String>(
-                                  //                     value: e,
-                                  //                     child: ListTile(
-                                  //                       title: Text(
-                                  //                         e,
-                                  //                         style: TextStyle(
-                                  //                             color:
-                                  //                                 primaryGreen),
-                                  //                       ),
-                                  //                     )))
-                                  //             .toList())
-                                  //     .then((value) {
-                                  //   setState(() {
-                                  //     selectedWorkout = value ?? selectedWorkout;
-                                  //   });
-                                  // });
                                 },
                                 color: primaryColor1,
                                 offset: Offset(10, 30),
@@ -264,64 +228,7 @@ class _CalorisCalState extends State<CalorisCal> {
                                           color: primaryColor1,
                                         )
                                       ],
-                                    )
-
-                                    // DropdownButton<String>(
-                                    //   isExpanded: true,
-                                    //   dropdownColor: primaryGreen,
-                                    //   iconEnabledColor: primaryColor1,
-                                    //   borderRadius: BorderRadius.circular(20),
-                                    //   value: selectedWorkout,
-                                    //   style: TextStyle(color: primaryColor1),
-                                    //   underline: SizedBox(),
-                                    //   // selectedItemBuilder: (context) {
-                                    //   //   return [
-                                    //   //     Align(
-                                    //   //       alignment: Alignment.center,
-                                    //   //       child: Container(
-                                    //   //         child: Text(
-                                    //   //           selectedWorkout,
-                                    //   //           style:
-                                    //   //               TextStyle(color: primaryColor1),
-                                    //   //         ),
-                                    //   //       ),
-                                    //   //     )
-                                    //   //   ];
-                                    //   //   // List.generate(
-                                    //   //   //     workoutsName.length,
-                                    //   //   //     (index) => Container(
-                                    //   //   //           decoration: BoxDecoration(
-                                    //   //   //               borderRadius:
-                                    //   //   //                   BorderRadius.circular(20)),
-                                    //   //   //           child: Text(
-                                    //   //   //             workoutsName[index],
-                                    //   //   //             style: TextStyle(
-                                    //   //   //                 color: primaryColor1),
-                                    //   //   //           ),
-                                    //   //   //         ));
-                                    //   // },
-                                    //   onChanged: (value) {
-                                    //     setState(() {
-                                    //       selectedWorkout = value!;
-                                    //     });
-                                    //   },
-                                    //   items: workoutsName
-                                    //       .map<DropdownMenuItem<String>>((e) =>
-                                    //           DropdownMenuItem(
-                                    //             child: Card(
-                                    //               shape: RoundedRectangleBorder(
-                                    //                   borderRadius:
-                                    //                       BorderRadius.circular(20)),
-                                    //               child: Text(
-                                    //                 e,
-                                    //               ),
-                                    //             ),
-                                    //             value: e,
-                                    //           ))
-                                    //       .toList(),
-                                    // ),
-
-                                    ),
+                                    )),
                               ),
                             ),
                             SizedBox(
@@ -363,12 +270,6 @@ class _CalorisCalState extends State<CalorisCal> {
                                         hintStyle:
                                             TextStyle(color: primaryColor1),
                                         border: InputBorder.none,
-                                        // border: OutlineInputBorder(
-                                        //     borderSide:
-                                        //         BorderSide(color: Colors.black)),
-                                        // focusedBorder: OutlineInputBorder(
-                                        //     borderSide:
-                                        //         BorderSide(color: Colors.cyan))
                                       ),
                                     ),
                                   ),
@@ -401,14 +302,7 @@ class _CalorisCalState extends State<CalorisCal> {
                                             hintText: "00",
                                             hintStyle:
                                                 TextStyle(color: primaryColor1),
-                                            border: InputBorder.none
-                                            // border: OutlineInputBorder(
-                                            //     borderSide:
-                                            //         BorderSide(color: Colors.black)),
-                                            // focusedBorder: OutlineInputBorder(
-                                            //     borderSide:
-                                            //         BorderSide(color: Colors.cyan))
-                                            ),
+                                            border: InputBorder.none),
                                       ),
                                     ),
                                   ),

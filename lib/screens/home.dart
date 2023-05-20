@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import "package:flutter/material.dart";
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_grounds/screens/bookings/booking_ui.dart';
@@ -10,7 +9,6 @@ import 'package:smart_grounds/screens/event_screen/event_data_screen.dart';
 import 'package:smart_grounds/screens/Auth/login_screen.dart';
 import 'package:smart_grounds/screens/records/addRecords.dart';
 import 'package:smart_grounds/screens/records/record.dart';
-
 import 'bookings/book_ground.dart';
 import 'bookings/booking_home.dart';
 import 'constants.dart';
@@ -48,7 +46,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: primaryColor3,
-      // resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(
           "Smart Grounds",
@@ -304,24 +301,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               visible: false,
               child: Container(),
             );
-            // return widget.userType == 'others' ||
-            //         _index == 4 ||
-            //         _index == 3 ||
-            //         _index == 1
-            //     ? Align(
-            //         alignment: Alignment.bottomRight,
-            //         child: GestureDetector(
-            //             onTap: () {
-            //               Navigator.of(context).push(MaterialPageRoute(
-            //                   builder: (context) => _index == 4
-            //                       ? BookGround()
-            //                       : _index == 3
-            //                           ? AddEvents()
-            //                           : AddRecords()));
-            //             },
-            //             child: AddIcon()),
-            //       )
-            //     : null;
           }),
     );
   }

@@ -189,8 +189,11 @@ class _AddEventsState extends State<AddEvents> {
                                   .then((value) {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(
-                                  content: Text("Event Added Successfully"),
-                                  backgroundColor: Colors.black,
+                                  content: Text(
+                                    "Event Added Successfully",
+                                    style: TextStyle(color: primaryColor1),
+                                  ),
+                                  backgroundColor: primaryGreen,
                                   duration: Duration(seconds: 2),
                                 ));
                                 setState(() {
@@ -204,18 +207,20 @@ class _AddEventsState extends State<AddEvents> {
                               });
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(SnackBar(
-                                content:
-                                    Text("There is an Error in Adding Event"),
-                                backgroundColor: Colors.cyan,
+                                content: Text(
+                                  "There is an Error in Adding Event",
+                                  style: TextStyle(color: primaryColor1),
+                                ),
+                                backgroundColor: primaryGreen,
                                 duration: Duration(seconds: 2),
                               ));
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(SnackBar(
                                 content: Text(
                                   "Try agian later",
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(color: primaryColor1),
                                 ),
-                                backgroundColor: Colors.black,
+                                backgroundColor: primaryGreen,
                                 duration: Duration(seconds: 1),
                               ));
                             });
@@ -250,200 +255,6 @@ class _AddEventsState extends State<AddEvents> {
               ),
             ),
           ),
-          // SingleChildScrollView(
-          //   child: Container(
-          //     margin: EdgeInsets.all(10),
-          //     child: Column(
-          //       crossAxisAlignment: CrossAxisAlignment.start,
-          //       children: [
-          //         SizedBox(
-          //           height: 40,
-          //         ),
-          //         fields("Event Name", eventNameController),
-          //         fields("Organizer", organizerController),
-          //         fields("Team 1 Name", team1Controller),
-          //         fields("Team 2 Name", team2Controller),
-          //         fields("Place", placeController),
-
-          //         /// Date
-          //         GestureDetector(
-          //             onTap: () {
-          //               buildMaterialDatePicker(context);
-          //             },
-          //             child: Container(
-          //                 decoration: BoxDecoration(
-          //                     borderRadius: BorderRadius.circular(10),
-          //                     border: Border.all(color: Colors.cyan)),
-          //                 child: Row(children: [
-          //                   IconButton(
-          //                     onPressed: () {
-          //                       buildMaterialDatePicker(context);
-          //                     },
-          //                     icon: Icon(Icons.calendar_today_outlined,
-          //                         color: Colors.cyan),
-          //                   ),
-          //                   SizedBox(
-          //                     width: 15,
-          //                   ),
-          //                   Text(
-          //                     "${selectedEventDate!.toLocal()}".split(" ")[0],
-          //                   )
-          //                 ]))),
-
-          //         SizedBox(
-          //           height: 20,
-          //         ),
-
-          //         /// Start Time
-          //         Row(
-          //           children: [
-          //             Text(
-          //               "Start Time",
-          //               style: TextStyle(color: Colors.cyan, fontSize: 20),
-          //             ),
-          //             Spacer(),
-          //             GestureDetector(
-          //               onTap: () {
-          //                 _selectStartTime(context);
-          //               },
-          //               child: Container(
-          //                 height: 60,
-          //                 width: 80,
-          //                 alignment: Alignment.center,
-          //                 decoration: BoxDecoration(
-          //                     borderRadius: BorderRadius.circular(5),
-          //                     border: Border.all(color: Colors.cyan, width: 3)),
-          //                 child: Text(
-          //                   selectedStartTime,
-          //                   style: TextStyle(
-          //                       color: Colors.black,
-          //                       fontSize: 18,
-          //                       fontWeight: FontWeight.w600),
-          //                 ),
-          //               ),
-          //             ),
-          //             SizedBox(
-          //               width: 200,
-          //             ),
-          //           ],
-          //         ),
-          //         SizedBox(
-          //           height: 20,
-          //         ),
-
-          //         /// End Time
-          //         Row(
-          //           children: [
-          //             Text(
-          //               "End Time",
-          //               style: TextStyle(color: Colors.cyan, fontSize: 20),
-          //             ),
-          //             Spacer(),
-          //             GestureDetector(
-          //               onTap: () {
-          //                 _selectEndTime(context);
-          //               },
-          //               child: Container(
-          //                 height: 60,
-          //                 width: 80,
-          //                 alignment: Alignment.center,
-          //                 decoration: BoxDecoration(
-          //                     borderRadius: BorderRadius.circular(5),
-          //                     border: Border.all(color: Colors.cyan, width: 3)),
-          //                 child: Text(
-          //                   selectedEndTime,
-          //                   style: TextStyle(
-          //                       color: Colors.black,
-          //                       fontSize: 18,
-          //                       fontWeight: FontWeight.w600),
-          //                 ),
-          //               ),
-          //             ),
-          //             SizedBox(
-          //               width: 200,
-          //             ),
-          //           ],
-          //         ),
-          //         SizedBox(
-          //           height: 20,
-          //         ),
-
-          //         /// Add Button
-          //         Align(
-          //           alignment: Alignment.bottomRight,
-          //           child: SizedBox(
-          //             height: 50,
-          //             width: 120,
-          //             child: ElevatedButton(
-          //                 onPressed: () {
-          //                   setState(() {
-          //                     submiting = true;
-          //                   });
-          //                   dataBase
-          //                       .addEvent(
-          //                     eventName: eventNameController.text,
-          //                     organizer: organizerController.text,
-          //                     team1: team1Controller.text,
-          //                     team2: team2Controller.text,
-          //                     place: placeController.text,
-          //                     date: selectedEventDate!
-          //                         .toLocal()
-          //                         .toString()
-          //                         .split(" ")[0],
-          //                     startTime: selectedStartTime,
-          //                     endTime: selectedEndTime,
-          //                   )
-          //                       .then((value) {
-          //                     Future.delayed(Duration(seconds: 2))
-          //                         .then((value) {
-          //                       ScaffoldMessenger.of(context)
-          //                           .showSnackBar(SnackBar(
-          //                         content: Text("Event Added Successfully"),
-          //                         backgroundColor: Colors.black,
-          //                         duration: Duration(seconds: 2),
-          //                       ));
-          //                       setState(() {
-          //                         submiting = false;
-          //                       });
-          //                       Navigator.pop(context);
-          //                     });
-          //                   }).catchError((e) {
-          //                     setState(() {
-          //                       submiting = false;
-          //                     });
-          //                     ScaffoldMessenger.of(context)
-          //                         .showSnackBar(SnackBar(
-          //                       content:
-          //                           Text("There is an Error in Adding Event"),
-          //                       backgroundColor: Colors.cyan,
-          //                       duration: Duration(seconds: 2),
-          //                     ));
-          //                     ScaffoldMessenger.of(context)
-          //                         .showSnackBar(SnackBar(
-          //                       content: Text(
-          //                         "Try agian later",
-          //                         style: TextStyle(color: Colors.white),
-          //                       ),
-          //                       backgroundColor: Colors.black,
-          //                       duration: Duration(seconds: 1),
-          //                     ));
-          //                   });
-          //                 },
-          //                 style: ElevatedButton.styleFrom(
-          //                     backgroundColor: Colors.cyan,
-          //                     elevation: 10,
-          //                     shape: RoundedRectangleBorder(
-          //                         borderRadius: BorderRadius.circular(20))),
-          //                 child: Text(
-          //                   "ADD",
-          //                   style: TextStyle(fontSize: 25),
-          //                 )),
-          //           ),
-          //         )
-          //       ],
-          //     ),
-          //   ),
-          // ),
           if (submiting)
             Container(
               height: double.infinity,
@@ -545,7 +356,6 @@ class _AddEventsState extends State<AddEvents> {
                 : primaryGreen),
         entryModeIconColor: Colors.transparent),
     textTheme: TextTheme(
-      // titleLarge: TextStyle(color: primaryColor1, fontSize: 20),
       labelSmall: TextStyle(color: primaryColor1, fontSize: 20),
     ),
     textButtonTheme: TextButtonThemeData(
@@ -572,7 +382,6 @@ class _AddEventsState extends State<AddEvents> {
         _hour = selectedTime.hour.toString();
         _minute = selectedTime.minute.toString();
         _time = _hour! + ' : ' + _minute!;
-        // selectedStartTime = _time;
         selectedStartTime = formatDate(
             DateTime(2019, 08, 1, selectedTime.hour, selectedTime.minute),
             [hh, ':', nn, " ", am]).toString();
@@ -593,7 +402,6 @@ class _AddEventsState extends State<AddEvents> {
         _hour = selectedTime.hour.toString();
         _minute = selectedTime.minute.toString();
         _time = _hour! + ' : ' + _minute!;
-        // selectedStartTime = _time;
         selectedEndTime = formatDate(
             DateTime(2019, 08, 1, selectedTime.hour, selectedTime.minute),
             [hh, ':', nn, " ", am]).toString();

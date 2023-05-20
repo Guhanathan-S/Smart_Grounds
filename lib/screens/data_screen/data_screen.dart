@@ -19,66 +19,25 @@ class Data extends StatefulWidget {
 class _DataState extends State<Data> {
   List<UserData> usersData = [];
   FirebaseDatabase database = FirebaseDatabase.instanceFor(app: Firebase.app());
-  StreamSubscription? _dataStream;
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore fireStoreInstance = FirebaseFirestore.instance;
   String userId = "";
   bool isLoading = true;
   bool data = false;
   ScrollController listController = ScrollController();
-  getUserId() async {
-    await fireStoreInstance
-        .collection('users')
-        .doc(auth.currentUser!.uid)
-        .get()
-        .then((value) {
-      userId = value.get('register_number');
-      print(userId);
-    });
-    // getData();
-  }
-
-  getData() {
-    _dataStream =
-        database.ref().child("users_data/$userId").onValue.listen((event) {
-      try {
-        var recivedData = Data_Model.fromJson(event.snapshot.value);
-        usersData = recivedData.data!;
-      } catch (e) {
-        print(e);
-        data = true;
-      }
-      setState(() {});
-    });
-  }
 
   @override
   void initState() {
-    // getUserId();
     super.initState();
   }
 
   @override
   void dispose() {
-    if (_dataStream != null) {
-      _dataStream!.cancel();
-    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // if (data)
-    //   return Center(
-    //     child: Text(
-    //       "No Record Found",
-    //       style: TextStyle(color: primaryGreen, fontSize: 30),
-    //     ),
-    //   );
-    // if (usersData.length == 0)
-    //   return Center(
-    //     child: CircularProgressIndicator(),
-    //   );
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 5),
       child: FutureBuilder(
@@ -128,121 +87,17 @@ class _DataState extends State<Data> {
                         return NewCardDesign(
                           userData: usersData[index],
                         );
-
-                        // DetailsCardUi();
-
-                        // card(usersData[index]);
                       });
                 });
           }),
     );
   }
-
-  // Widget card(data) {
-  //   return Material(
-  //     elevation: 5,
-  //     borderRadius: BorderRadius.circular(10),
-  //     child: GestureDetector(
-  //       onTap: () {
-  //         // Navigator.push(
-  //         //     context, MaterialPageRoute(builder: (context) => DetailCard()));
-  //       },
-  //       child: Container(
-  //           margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-  //           height: 160,
-  //           padding: EdgeInsets.all(10),
-  //           decoration: BoxDecoration(
-  //             borderRadius: BorderRadius.circular(10),
-  //           ),
-  //           child: Column(
-  //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //             children: [
-  //               Row(
-  //                 children: [
-  //                   Icon(
-  //                     Icons.calendar_today_outlined,
-  //                     color: Colors.black,
-  //                   ),
-  //                   SizedBox(
-  //                     width: 5,
-  //                   ),
-  //                   Text(
-  //                     data.date != null ? data.date : "",
-  //                     style: TextStyle(fontSize: 14, color: Colors.black),
-  //                   ),
-  //                 ],
-  //               ),
-  //               carddata("In time", data.inTime != null ? data.inTime : ""),
-  //               carddata("Out time", data.outTime != null ? data.outTime : ""),
-  //               Row(
-  //                 mainAxisAlignment: MainAxisAlignment.center,
-  //                 children: [
-  //                   if (data.calories == null)
-  //                     GestureDetector(
-  //                       onTap: () {
-  //                         Navigator.push(
-  //                             context,
-  //                             MaterialPageRoute(
-  //                                 builder: (context) => CalorisCal(
-  //                                       dataKey: data.key,
-  //                                     )));
-  //                       },
-  //                       child: Text(
-  //                         "Enter Workouts To get Calories",
-  //                         style: GoogleFonts.zillaSlab(
-  //                             fontSize: 18, color: Colors.grey[600]),
-  //                       ),
-  //                     ),
-  //                   if (data.calories != null) ...[
-  //                     Text(
-  //                       "Total Calories burn   :",
-  //                     ),
-  //                     Spacer(),
-  //                     Text(data.calories),
-  //                     SizedBox(
-  //                       width: 100,
-  //                     )
-  //                   ]
-  //                 ],
-  //               )
-  //             ],
-  //           )),
-  //     ),
-  //   );
-  // }
-
-  // Widget carddata(text, data) {
-  //   return Row(
-  //     children: [
-  //       ImageIcon(
-  //         AssetImage("assets/clock.png"),
-  //         size: 20,
-  //         color: Colors.black,
-  //       ),
-  //       SizedBox(width: 5),
-  //       Text(
-  //         text,
-  //         style: TextStyle(
-  //           fontSize: 14,
-  //         ),
-  //       ),
-  //       Spacer(),
-  //       Text(
-  //         ":  $data",
-  //         style: TextStyle(fontSize: 14, color: Colors.black),
-  //       ),
-  //       SizedBox(
-  //         width: 50,
-  //       ),
-  //     ],
-  //   );
-  // }
 }
 
 class NewCardDesign extends StatefulWidget {
   NewCardDesign({required this.userData});
 
-  UserData userData;
+  final UserData userData;
 
   @override
   State<NewCardDesign> createState() => _NewCardDesignState();
@@ -331,73 +186,6 @@ class _NewCardDesignState extends State<NewCardDesign>
                       ? (int.parse(widget.userData.time!.split(' ')[0])).toInt()
                       : 0,
                   total: totalTime),
-              // Expanded(
-              //   child: Container(
-              //     height: 180,
-              //     decoration: BoxDecoration(
-              //         color: primaryColor1,
-              //         borderRadius: BorderRadius.circular(20)),
-              //     child: Column(
-              //       mainAxisAlignment: MainAxisAlignment.center,
-              //       children: [
-              //         Text(
-              //           'Time',
-              //           style: TextStyle(color: primaryGreen),
-              //         ),
-              //         SizedBox(
-              //           height: 20,
-              //         ),
-              //         Stack(
-              //           alignment: Alignment.center,
-              //           children: [
-              //             Container(
-              //               height: 100,
-              //               width: 100,
-              //               decoration: BoxDecoration(
-              //                 border: Border.all(
-              //                     color: primaryGreen.withOpacity(.6),
-              //                     width: 4),
-              //                 shape: BoxShape.circle,
-              //               ),
-              //             ),
-              //             Container(
-              //               height: 95,
-              //               width: 95,
-              //               child: AnimatedBuilder(
-              //                   animation: _animation,
-              //                   builder: (context, child) {
-              //                     return CustomPaint(
-              //                       painter: CircleProgressPainter(
-              //                           progress: _animation.value,
-              //                           data: (45 / 60) * 100),
-              //                       child: Align(
-              //                           alignment: Alignment.center,
-              //                           child: Text(
-              //                             '45',
-              //                             style: TextStyle(
-              //                                 color: whiteColor, fontSize: 20),
-              //                           )),
-              //                       // CircularOuterIndicatorPainter(
-              //                       //   animation: _animation.value,
-              //                       // ),
-              //                     );
-              //                   }),
-              //             )
-              //           ],
-              //         )
-              //         // Container(
-              //         //   child: CircularProgressIndicator(
-              //         //     value: 50.0 /
-              //         //         100, // Convert percentage to a value between 0 and 1
-              //         //     backgroundColor: Colors.grey[300],
-              //         //     valueColor: AlwaysStoppedAnimation<Color>(
-              //         //         Colors.blue), // Optional: set the progress color
-              //         //   ),
-              //         // )
-              //       ],
-              //     ),
-              //   ),
-              // )
             ],
           ),
         ],
@@ -461,9 +249,6 @@ class _NewCardDesignState extends State<NewCardDesign>
                                   style: TextStyle(
                                       color: whiteColor, fontSize: 20),
                                 )),
-                            // CircularOuterIndicatorPainter(
-                            //   animation: _animation.value,
-                            // ),
                           );
                         }),
                   )
@@ -625,69 +410,6 @@ class BottomContainerClipper extends CustomClipper<Path> {
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) => true;
 }
 
-class CircularIndicatorPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()
-      ..color = primaryColor3.withOpacity(20)
-      ..strokeWidth = 2
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round;
-    canvas.drawCircle(
-        Offset(size.width / 2, size.height / 2), size.width / 2, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
-}
-
-// class CircularOuterIndicatorPainter extends CustomPainter {
-//   CircularOuterIndicatorPainter({required double animation})
-//       : animation = animation;
-//   late double animation;
-//   @override
-//   void paint(Canvas canvas, Size size) {
-//     Paint paint = Paint()
-//       ..color = whiteColor
-//       ..strokeCap = StrokeCap.round
-//       ..strokeWidth = 13
-//       ..style = PaintingStyle.stroke;
-
-//     Path path = Path();
-//     path.moveTo((size.width / 2), (size.height));
-//     path.arcToPoint(
-//       Offset((size.width / 2) * animation, (0) * animation),
-//       radius: Radius.circular(size.width / 2),
-//     );
-
-//     canvas.drawPath(path, paint);
-//     Path path1 = Path();
-//     path1.moveTo(size.width / 2, 0);
-//     path1.arcToPoint(
-//       Offset(90, 27.5),
-//       radius: Radius.circular(size.width / 2),
-//     );
-//     print("${size.width} , ${(size.height / 2)}");
-//     canvas.drawPath(path1, paint);
-//     double radius = size.width / 2;
-//     List points = [];
-//     for (int theta = 0; theta <= 360; theta++) {
-//       final x = radius * cos(theta * pi / 180);
-//       final y = radius * sin(theta * pi / 180);
-//       points.add([x, y]);
-//     }
-//     print(points.length);
-//     // final rect = Rect.fromCircle(
-//     //     center: Offset(size.width / 2, size.height / 2),
-//     //     radius: size.width / 2);
-//     // canvas.drawArc(rect, pi / 4, pi, false, paint);
-//   }
-
-//   @override
-//   bool shouldRepaint(CircularOuterIndicatorPainter oldDelegate) =>
-//       oldDelegate.animation != animation;
-// }
-
 class CircleProgressPainter extends CustomPainter {
   late Paint _paint;
   double progress;
@@ -717,33 +439,3 @@ class CircleProgressPainter extends CustomPainter {
   bool shouldRepaint(CircleProgressPainter oldDelegate) =>
       oldDelegate.progress != progress;
 }
-
-// class CircleProgressCalPainter extends CustomPainter {
-//   late Paint _paint;
-//   double progress;
-//   double data;
-
-//   CircleProgressCalPainter({required this.progress, required this.data}) {
-//     _paint = Paint()
-//       ..color = primaryGreen
-//       ..strokeCap = StrokeCap.round
-//       ..strokeWidth = 13 
-//       ..style = PaintingStyle.stroke;
-//   }
-
-//   @override
-//   void paint(Canvas canvas, Size size) {
-//     double radius = size.width / 2;
-//     canvas.drawArc(
-//       Rect.fromCircle(center: Offset(radius, radius), radius: radius),
-//       pi / 2,
-//       pi * 0.02 * data * progress,
-//       false,
-//       _paint,
-//     );
-//   }
-
-//   @override
-//   bool shouldRepaint(CircleProgressCalPainter oldDelegate) =>
-//       oldDelegate.progress != progress;
-// }
