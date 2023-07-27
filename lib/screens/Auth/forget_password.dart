@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_grounds/screens/Auth/auth.dart';
 import 'package:smart_grounds/screens/Auth/login_screen.dart';
-import '../constants.dart';
+import '../../utils/constants.dart';
 
 class ForgetPassword extends StatefulWidget {
   @override

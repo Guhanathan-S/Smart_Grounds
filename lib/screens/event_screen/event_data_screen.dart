@@ -1,11 +1,11 @@
-import 'dart:async';
 import 'dart:math';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_grounds/database/database.dart';
-import 'package:smart_grounds/screens/constants.dart';
+import '../../database/firebase_data/database.dart';
+import '../../utils/constants.dart';
 import 'package:smart_grounds/screens/event_screen/eventDataModel.dart';
 import 'package:smart_grounds/screens/event_screen/updateEvent.dart';
 import 'package:smart_grounds/screens/home.dart';
@@ -21,12 +21,7 @@ class EventDataScreen extends StatefulWidget {
 class _EventDataScreenState extends State<EventDataScreen> {
   List<EventData> events = [];
   FirebaseDatabase database = FirebaseDatabase.instanceFor(app: Firebase.app());
-  Stream<DatabaseEvent>? _dataBaseEvents;
-  bool updateEvent = false;
-  DateTime dateTime = DateTime.now();
-  String team1 = "";
-  String team2 = "";
-  String id = "";
+  
   @override
   void initState() {
     DataBase().removeOldEvent();
@@ -53,9 +48,10 @@ class _EventDataScreenState extends State<EventDataScreen> {
                     builder: (BuildContext context,
                         AsyncSnapshot<DatabaseEvent> snapShot) {
                       if (!snapShot.hasData)
-                        return CircularProgressIndicator(
-                          strokeWidth: 4,
-                          color: primaryColor1,
+                        return Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 4,
+                          ),
                         );
                       if (snapShot.data!.snapshot.children.isEmpty)
                         return Center(
@@ -70,12 +66,10 @@ class _EventDataScreenState extends State<EventDataScreen> {
                               .eventData!);
                       List<EventData> temp = [];
                       events.sort((a, b) {
-                        DateTime dateTime1 = DateTime.parse(a.date.toString() +
-                            "${a.endTime!.split(" ")[1] == "AM" && (a.endTime!.split(":")[0].substring(0, 1) == '0') ? " 0" : " "}" +
-                            "${(int.parse(a.endTime!.split(":")[0]) + (a.endTime!.split(" ")[1] == "PM" ? 12 : 0)).toString()}:${a.endTime!.split(" ")[0].split(":")[1]}");
-                        DateTime dateTime2 = DateTime.parse(b.date.toString() +
-                            "${b.endTime!.split(" ")[1] == "AM" && (b.endTime!.split(":")[0].substring(0, 1) == '0') ? " 0" : " "}" +
-                            "${(int.parse(b.endTime!.split(":")[0]) + (b.endTime!.split(" ")[1] == "PM" ? 12 : 0)).toString()}:${b.endTime!.split(" ")[0].split(":")[1]}");
+                        DateTime dateTime1 =
+                            parseDateTime(date: a.date!, endTime: a.endTime!);
+                        DateTime dateTime2 =
+                            parseDateTime(date: b.date!, endTime: b.endTime!);
                         return dateTime1.compareTo(dateTime2);
                       });
                       temp.addAll(events.reversed);
@@ -136,6 +130,12 @@ class _EventDataScreenState extends State<EventDataScreen> {
         ),
       ),
     );
+  }
+
+  DateTime parseDateTime({required String date, required String endTime}) {
+    return DateTime.parse(date.toString() +
+        "${endTime.split(" ")[1] == "AM" && (endTime.split(":")[0].substring(0, 1) == '0') ? " 0" : " "}" +
+        "${(int.parse(endTime.split(":")[0]) + (endTime.split(" ")[1] == "PM" ? 12 : 0)).toString()}:${endTime.split(" ")[0].split(":")[1]}");
   }
 
   /// New Ui
@@ -199,6 +199,8 @@ class BottomSheetData extends StatelessWidget {
   late final EventData eventData;
   late final String type;
   final DateTime dateTime = DateTime.now();
+  late final FirebaseMessaging _firebaseMessaging;
+  late final NotificationSettings _settings;
   @override
   Widget build(BuildContext context) {
     String scoreData = dateTime.isBefore(DateTime.parse(
@@ -242,15 +244,23 @@ class BottomSheetData extends StatelessWidget {
                               : 'Upcoming Event',
                   style: TextStyle(color: primaryColor1, fontSize: 15),
                 ),
-                rightData: Text(
-                  eventData.team2Score != null
-                      ? eventData.team2Score!
-                      : scoreData == "Event done results need to be updated"
-                          ? "Results not Updated"
-                          : scoreData == 'On Going Event'
-                              ? 'Score 1'
-                              : 'Upcoming Event',
-                  style: TextStyle(color: primaryColor1, fontSize: 15),
+                rightData: GestureDetector(
+                  onTap: scoreData == 'Upcoming Event'
+                      ? () {
+                          if (_settings.authorizationStatus ==
+                              AuthorizationStatus.authorized) {}
+                        }
+                      : null,
+                  child: Text(
+                    eventData.team2Score != null
+                        ? eventData.team2Score!
+                        : scoreData == "Event done results need to be updated"
+                            ? "Results not Updated"
+                            : scoreData == 'On Going Event'
+                                ? 'Score 1'
+                                : 'Upcoming Event',
+                    style: TextStyle(color: primaryColor1, fontSize: 15),
+                  ),
                 ),
               ),
 
@@ -365,6 +375,17 @@ class BottomSheetData extends StatelessWidget {
         )
       ],
     ));
+  }
+
+  void registerNotification() async {
+    _firebaseMessaging = FirebaseMessaging.instance;
+    _settings = await _firebaseMessaging.requestPermission(
+      alert: true,
+      badge: true,
+      provisional: true,
+      sound: true,
+      announcement: true,
+    );
   }
 }
 

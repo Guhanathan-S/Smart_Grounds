@@ -1,81 +1,75 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:ui';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_grounds/database/userData.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_grounds/screens/data_screen/view_model/datascreen_view.dart';
+import '../../notifications/firebase_messaging.dart';
+import '../../notifications/flutter_notifications.dart';
+import 'database/firebase_data/userData.dart';
+import 'package:smart_grounds/screens/controls/view_model/controls_view.dart';
 import 'package:smart_grounds/screens/home.dart';
 import 'package:smart_grounds/screens/Auth/login_screen.dart';
-import 'package:smart_grounds/screens/constants.dart';
+import '../../utils/constants.dart';
+import 'package:smart_grounds/screens/records/view_model/records_view.dart';
+import 'utils/network_connectivity/network_view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  FlutterNotifications.initialize();
   await Firebase.initializeApp();
-  runApp(MyApp());
+  String userType = "";
+  devHeight = window.physicalSize.height / 2.75;
+  devWidth = window.physicalSize.width / 2.75;
+  if (UserDataBase.auth.currentUser != null) {
+    await UserDataBase.getUserData();
+    userType = UserDataBase.userDetails.userType;
+    FirebasePushMessaging().initNotification();
+  }
+  runApp(MyApp(
+    userType: userType,
+  ));
 }
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 class MyApp extends StatelessWidget {
+  const MyApp({required this.userType});
+  final String userType;
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => ControlViewModel()),
+          ChangeNotifierProvider(create: (context) => RecordsViewModel()),
+          ChangeNotifierProvider(
+              create: (context) => NetworkConnectivityViewModel()),
+          ChangeNotifierProvider(create: (context) => DataViewModel())
+        ],
+        child: MaterialApp(
+            navigatorKey: navigatorKey,
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              primarySwatch: _createMaterialColor(primaryGreen),
+            ),
+            home: userType.isNotEmpty ? Home(userType: userType) : Login()));
+  }
+}
+
+class LoadingIndicator extends StatelessWidget {
+  const LoadingIndicator({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: _createMaterialColor(primaryGreen),
-        ),
-        home: SplashScreen());
-  }
-}
-
-class SplashScreen extends StatefulWidget {
-  @override
-  _SplashScreenState createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  FirebaseAuth auth = FirebaseAuth.instance;
-  String? userType;
-  getType() async {
-    if (auth.currentUser != null) {
-      userType = await UserDataBase(uid: auth.currentUser!.uid).getUserType();
-    }
-  }
-
-  @override
-  void initState() {
-    getType();
-    Timer(Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => auth.currentUser != null
-                ? Home(
-                    userType: userType?.toLowerCase(),
-                  )
-                : Login(),
-          ));
-    });
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    devHeight = MediaQuery.of(context).size.height;
-    devWidth = MediaQuery.of(context).size.width;
-    return Material(
-      color: Color(0xFF0D1C2E),
-      child: Center(
-        child: IntrinsicWidth(
-          child: IntrinsicHeight(
-            child: Container(
-                padding: EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Color(0xFFc0e862),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  "Smart Grounds",
-                  style: TextStyle(fontSize: 30, color: Color(0xFF0D1C2E)),
-                )),
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        backgroundColor: primaryColor1,
+        body: Center(
+          child: CircularProgressIndicator(
+            color: primaryGreen,
+            strokeWidth: 4,
           ),
         ),
       ),

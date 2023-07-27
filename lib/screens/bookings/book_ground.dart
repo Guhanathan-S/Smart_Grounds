@@ -4,9 +4,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_grounds/database/database.dart';
-import 'package:smart_grounds/screens/bookings/booking_model.dart';
-import 'package:smart_grounds/screens/constants.dart';
+import '../../database/firebase_data/database.dart';
+import '../../utils/constants.dart';
+import '../bookings/model/booking_model.dart';
 
 class BookGround extends StatefulWidget {
   @override
@@ -20,7 +20,6 @@ class _BookGroundState extends State<BookGround> {
   TimeOfDay selectedTime = TimeOfDay(hour: 00, minute: 00);
   String selectedStartTime = "0:00";
   String selectedEndTime = "0:00";
-  String? _hour, _minute, _time;
   bool fullDay = false;
   List<String> category = [
     "Cricket",
@@ -567,9 +566,6 @@ class _BookGroundState extends State<BookGround> {
     if (picked != null)
       setState(() {
         selectedTime = picked;
-        _hour = selectedTime.hour.toString();
-        _minute = selectedTime.minute.toString();
-        _time = _hour! + ' : ' + _minute!;
         selectedStartTime = formatDate(
             DateTime(2019, 08, 1, selectedTime.hour, selectedTime.minute),
             [hh, ':', nn, " ", am]).toString();
@@ -587,9 +583,6 @@ class _BookGroundState extends State<BookGround> {
     if (picked != null)
       setState(() {
         selectedTime = picked;
-        _hour = selectedTime.hour.toString();
-        _minute = selectedTime.minute.toString();
-        _time = _hour! + ' : ' + _minute!;
         selectedEndTime = formatDate(
             DateTime(2019, 08, 1, selectedTime.hour, selectedTime.minute),
             [hh, ':', nn, " ", am]).toString();

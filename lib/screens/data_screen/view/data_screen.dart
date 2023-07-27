@@ -1,13 +1,12 @@
-import 'dart:async';
 import 'dart:math';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_grounds/screens/constants.dart';
-import 'package:smart_grounds/screens/data_screen/calories_cal.dart';
-import 'package:smart_grounds/screens/data_screen/data_model.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_grounds/screens/data_screen/view_model/datascreen_view.dart';
+import 'package:smart_grounds/utils/network_connectivity/internetError.dart';
+import '../../../utils/constants.dart';
+import '../../../utils/network_connectivity/network_view.dart';
+import 'calories_cal.dart';
+import '../model/data_model.dart ';
 
 class Data extends StatefulWidget {
   const Data({Key? key}) : super(key: key);
@@ -17,13 +16,6 @@ class Data extends StatefulWidget {
 }
 
 class _DataState extends State<Data> {
-  List<UserData> usersData = [];
-  FirebaseDatabase database = FirebaseDatabase.instanceFor(app: Firebase.app());
-  FirebaseAuth auth = FirebaseAuth.instance;
-  FirebaseFirestore fireStoreInstance = FirebaseFirestore.instance;
-  String userId = "";
-  bool isLoading = true;
-  bool data = false;
   ScrollController listController = ScrollController();
 
   @override
@@ -38,59 +30,43 @@ class _DataState extends State<Data> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 5),
-      child: FutureBuilder(
-          future: FirebaseFirestore.instance
-              .collection('users')
-              .doc(auth.currentUser!.uid)
-              .get(),
-          builder: (BuildContext context,
-              AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapShot) {
-            if (!snapShot.hasData)
-              return Center(child: CircularProgressIndicator());
-            userId = snapShot.data!.get('register_number');
-            return StreamBuilder(
-                stream: database.ref().child("users_data/$userId").onValue,
-                builder: (context, AsyncSnapshot<DatabaseEvent> snapShot) {
-                  usersData.clear();
-                  if (!snapShot.hasData)
-                    return Center(child: CircularProgressIndicator());
-                  if (snapShot.data!.snapshot.children.isEmpty)
-                    return Center(
-                      child: Text(
-                        'No Records',
-                        style: TextStyle(color: primaryGreen, fontSize: 35),
-                      ),
-                    );
-                  usersData.addAll(
-                      Data_Model.fromJson(snapShot.data!.snapshot.value).data!);
-                  usersData.sort((a, b) => a.date!.compareTo(b.date!));
-                  List<UserData> temp = [];
-                  temp.addAll(usersData.reversed);
-                  usersData.clear();
-                  usersData.addAll(temp);
-                  return ListView.separated(
-                      controller: listController,
-                      separatorBuilder: (context, index) {
-                        return SizedBox(
-                          height: 20,
-                        );
-                      },
-                      itemCount: usersData.length + 1,
-                      itemBuilder: (context, index) {
-                        // print(listController.);
-                        if (index == usersData.length)
+    NetworkConnectivityViewModel networkConnectivity =
+        context.watch<NetworkConnectivityViewModel>();
+    DataViewModel _userData = context.watch<DataViewModel>();
+    return networkConnectivity.connectionStatus
+        ? Container(
+            margin: EdgeInsets.symmetric(horizontal: 5),
+            child: _userData.loading
+                ? Center(
+                    child: CircularProgressIndicator(
+                    color: primaryGreen,
+                    strokeWidth: 4,
+                  ))
+                : _userData.userData.isEmpty
+                    ? Center(
+                        child: Text(
+                          'No Records',
+                          style: TextStyle(color: primaryGreen, fontSize: 35),
+                        ),
+                      )
+                    : ListView.separated(
+                        controller: listController,
+                        separatorBuilder: (context, index) {
                           return SizedBox(
-                            height: 50,
+                            height: 20,
                           );
-                        return NewCardDesign(
-                          userData: usersData[index],
-                        );
-                      });
-                });
-          }),
-    );
+                        },
+                        itemCount: _userData.userData.length,
+                        itemBuilder: (context, index) {
+                          if (index == _userData.userData.length)
+                            return SizedBox(
+                              height: 50,
+                            );
+                          return NewCardDesign(
+                            userData: _userData.userData[index],
+                          );
+                        }))
+        : InternetError();
   }
 }
 
@@ -118,6 +94,12 @@ class _NewCardDesignState extends State<NewCardDesign>
       end: 1,
     ).animate(_animationController);
     _animationController.forward();
+  }
+
+  @override
+  void didChangeDependencies() {
+    _animationController.forward();
+    super.didChangeDependencies();
   }
 
   @override

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import '../constants.dart';
+import '../../utils/constants.dart';
 import 'booking_ui.dart';
 
-class Booking_Home extends StatefulWidget {
-  const Booking_Home({Key? key}) : super(key: key);
+class BookingHome extends StatefulWidget {
+  const BookingHome({Key? key}) : super(key: key);
 
   @override
-  State<Booking_Home> createState() => _Booking_HomeState();
+  State<BookingHome> createState() => _BookingHomeState();
 }
 
-class _Booking_HomeState extends State<Booking_Home>
+class _BookingHomeState extends State<BookingHome>
     with TickerProviderStateMixin {
   TabController? tabControllerBook;
   @override

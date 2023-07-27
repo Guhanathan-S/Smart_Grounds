@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../database/userData.dart';
-import '/screens/constants.dart';
+import '../../database/firebase_data/userData.dart';
+import '../../utils/constants.dart';
 import 'dart:math' as math;
 
 class AuthUser {
@@ -189,7 +189,8 @@ class IconUI extends StatelessWidget {
 }
 
 class FirebaseAuthentication {
-  FirebaseAuth instance = FirebaseAuth.instance;
+  UserDataBase _userDataBase = UserDataBase();
+  FirebaseAuth instance = UserDataBase.auth;
   Timer? timer;
   var processingMessage = ''.obs;
   Future<List> signInWithEmailandPassword(
@@ -197,15 +198,10 @@ class FirebaseAuthentication {
       await instance
           .signInWithEmailAndPassword(email: email, password: password)
           .then((_) async {
-        List? finalValue;
-        User? user = instance.currentUser;
-        await UserDataBase(uid: user!.uid).getUserType().then((value) {
-          finalValue = [value, true];
-          print('After sigin in:$value');
-        }).onError((error, stackTrace) {
-          finalValue = ['Can\'t Login now. Try again Later. ', false];
-        });
-        return finalValue!;
+        late List finalValue;
+        await UserDataBase.getUserData();
+        finalValue = [UserDataBase.userDetails.userType, true];
+        return finalValue;
       }).onError((error, stackTrace) {
         print('error : $error');
         if (error.toString().toLowerCase().contains('there is no user')) {
@@ -249,7 +245,6 @@ class FirebaseAuthentication {
         processingMessage =
             'Verification Mail sent to your Mail. Please Verify'.obs;
       });
-      print('verifying user');
       isVerified = await verify(user: user);
       if (!isVerified) {
         print('Verification Time Completes. Deleting registered user ');
@@ -261,7 +256,7 @@ class FirebaseAuthentication {
       if (notInstitution) type = 'Others';
       registerNumber = email.split('@').first;
       if (email.contains("111")) type = 'Student';
-      await UserDataBase(uid: user.uid)
+      await _userDataBase
           .createUserData(
               name: registerName,
               type: type,
@@ -292,7 +287,6 @@ class FirebaseAuthentication {
     do {
       await Future.delayed(Duration(seconds: 5), () async {});
       await user!.reload();
-      print('isverifying');
       if (instance.currentUser!.emailVerified) return true;
       loopCount++;
     } while (loopCount <= 12);

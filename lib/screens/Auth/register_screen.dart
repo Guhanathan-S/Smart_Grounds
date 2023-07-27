@@ -1,11 +1,11 @@
 import 'dart:ui';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smart_grounds/screens/Auth/auth.dart';
 import 'package:smart_grounds/screens/home.dart';
 import 'package:smart_grounds/screens/Auth/login_screen.dart';
-import '../constants.dart';
+import '../../utils/constants.dart';
+import '../../notifications/firebase_messaging.dart';
 
 class RegisterScreen extends StatefulWidget {
   final onTap;
@@ -15,26 +15,6 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  TextEditingController controllerName = TextEditingController();
-  TextEditingController controllerNumber = TextEditingController();
-  TextEditingController controllerEmail = TextEditingController();
-  TextEditingController controllerPassword = TextEditingController();
-  FirebaseAuth auth = FirebaseAuth.instance;
-  User? user;
-  String registerNumber = "";
-  String registerName = "";
-  String userNumber = "";
-  final Shader linearGradient = LinearGradient(
-          colors: [Color(0xFF3BD588), Color(0xFF3BD588), Color(0xFF2D75D4)])
-      .createShader(Rect.fromLTRB(0, 0, 200, 70));
-  bool obtext = false;
-  String? userName;
-  String? email;
-  String? password;
-  String? type;
-  bool isInstitution = false;
-  final formkey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -162,11 +142,11 @@ class _BottomUIRegisterState extends State<BottomUIRegister>
                             notInstitution: notInstitution,
                             userNumber: numberController.text,
                             registerName: nameController.text);
-                        print('signUp returend');
                         setState(() {
                           isLoading = false;
                         });
                         if (value.last) {
+                          FirebasePushMessaging().initNotification();
                           Navigator.push(
                               context,
                               MaterialPageRoute(

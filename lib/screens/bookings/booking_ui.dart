@@ -1,9 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_grounds/database/database.dart';
-import 'package:smart_grounds/screens/bookings/booking_model.dart';
-import '../constants.dart';
+import '../../database/firebase_data/database.dart';
+import '../bookings/model/booking_model.dart';
+import '../../utils/constants.dart';
 
 class Booking extends StatefulWidget {
   final sport;

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:smart_grounds/screens/Auth/forget_password.dart';
 import 'package:smart_grounds/screens/home.dart';
 import 'package:smart_grounds/screens/Auth/register_screen.dart';
-import 'package:smart_grounds/screens/constants.dart';
-
+import '../../utils/constants.dart';
 import 'auth.dart';
+import '../../notifications/firebase_messaging.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -13,11 +13,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,6 +140,7 @@ class _BottomContainerState extends State<BottomContainer>
                           isLoading = false;
                         });
                         if (value.last) {
+                          FirebasePushMessaging().initNotification();
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(

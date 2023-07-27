@@ -1,17 +1,21 @@
+import 'dart:convert';
+import '../notifications/message_model.dart' as messages;
 import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_grounds/screens/bookings/booking_ui.dart';
-import 'package:smart_grounds/screens/controls/controls.dart';
-import 'package:smart_grounds/screens/data_screen/data_screen.dart';
+import 'package:smart_grounds/screens/controls/view/controls.dart';
+import '../../notifications/firebase_messaging.dart';
+import '../screens/data_screen/view/data_screen.dart';
 import 'package:smart_grounds/screens/event_screen/addEvents.dart';
 import 'package:smart_grounds/screens/event_screen/event_data_screen.dart';
 import 'package:smart_grounds/screens/Auth/login_screen.dart';
-import 'package:smart_grounds/screens/records/addRecords.dart';
-import 'package:smart_grounds/screens/records/record.dart';
+import '../screens/records/view/addRecords.dart';
+import '../screens/records/view/record.dart';
 import 'bookings/book_ground.dart';
 import 'bookings/booking_home.dart';
-import 'constants.dart';
+import '../utils/constants.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Home extends StatefulWidget {
   final userType;
@@ -27,6 +31,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   bool isStaff = false;
   FirebaseAuth auth = FirebaseAuth.instance;
   int _index = 0;
+  List<String> topics = [];
+  List<bool> checkedTopics = [];
   @override
   void initState() {
     print(widget.userType);
@@ -53,6 +59,38 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         ),
         backgroundColor: primaryColor1,
         actions: [
+          IconButton(
+              icon: Icon(
+                Icons.notifications,
+                color: whiteColor,
+              ),
+              onPressed: () async {
+                PermissionStatus permissionStatus =
+                    await Permission.notification.status;
+                if (permissionStatus == PermissionStatus.denied) {
+                  permissionStatus = await Permission.notification.request();
+                  if (permissionStatus == PermissionStatus.granted) {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                              title: Text("Select Events"),
+                              content: Column(
+                                children: [
+                                  ...List.generate(icon.keys.length, (index) {
+                                    return CheckboxListTile(
+                                      title: Text(icon.keys.toList()[index]),
+                                      value: false,
+                                      onChanged: (value) {
+                                        setState(() {});
+                                      },
+                                    );
+                                  })
+                                ],
+                              ),
+                            ));
+                  }
+                }
+              }),
           IconButton(
               onPressed: () {
                 showDialog(
@@ -152,10 +190,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           /// Belongs to institution
           : <Widget>[
               if (isStaff) Controls(),
-              Records(type: widget.userType),
+              Records(),
               Data(),
               EventDataScreen(type: widget.userType),
-              if (isStaff) Booking_Home(),
+              if (isStaff) BookingHome(),
             ][_index],
       bottomNavigationBar: ValueListenableBuilder(
           valueListenable: VisibleScaffoldWidgets(),
@@ -286,7 +324,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 child: Align(
                   alignment: Alignment.bottomRight,
                   child: GestureDetector(
-                      onTap: () {
+                      onTap: () async {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => _index == 4
                                 ? BookGround()

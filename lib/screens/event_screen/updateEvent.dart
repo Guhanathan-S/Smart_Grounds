@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:smart_grounds/database/database.dart';
-import 'package:smart_grounds/screens/constants.dart';
+import '../../database/firebase_data/database.dart';
+import '../../utils/constants.dart';
 import 'package:smart_grounds/screens/event_screen/event_data_screen.dart';
 
 class UpdateEventScore extends StatefulWidget {

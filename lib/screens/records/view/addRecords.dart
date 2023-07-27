@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:smart_grounds/database/database.dart';
-import 'package:smart_grounds/screens/constants.dart';
+import '/database/firebase_data/database.dart';
+import '/utils/constants.dart';
 
 class AddRecords extends StatefulWidget {
   @override

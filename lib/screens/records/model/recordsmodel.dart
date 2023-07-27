@@ -3,15 +3,14 @@ class RecordsModel {
     this.gymEquipments,
     this.sportsItems,
   });
-  List<GymEpuiments>? gymEquipments;
+  List<GymEquipments>? gymEquipments;
   SportsItems? sportsItems;
 
-  factory RecordsModel.fromJson(json) {
+  factory RecordsModel.fromJson(Map<Object?, Object?> json) {
     return RecordsModel(
-        gymEquipments: List<GymEpuiments>.from(json["gym_equipments"]
-            .values
-            .toList()
-            .map((json) => GymEpuiments.fromJson(json))),
+        gymEquipments: (json["gym_equipments"] as Map<Object? , Object?>).values
+            .map((json) => GymEquipments.fromJson(json))
+            .toList(),
         sportsItems: SportsItems.fromJson(json["sports_items"]));
   }
 }
@@ -49,8 +48,8 @@ class SportsItems {
   }
 }
 
-class GymEpuiments {
-  GymEpuiments({
+class GymEquipments {
+  GymEquipments({
     this.equipmentName,
     this.installedDate,
     this.image,
@@ -61,7 +60,7 @@ class GymEpuiments {
   String? image;
   int? condition;
 
-  factory GymEpuiments.fromJson(json) => GymEpuiments(
+  factory GymEquipments.fromJson(json) => GymEquipments(
       equipmentName: json["equipment_name"],
       installedDate: json["installed_date"],
       condition: json["condition"],

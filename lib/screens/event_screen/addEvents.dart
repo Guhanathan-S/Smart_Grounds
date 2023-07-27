@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_grounds/database/database.dart';
-import 'package:smart_grounds/screens/constants.dart';
+import 'package:smart_grounds/notifications/firebase_messaging.dart';
+import '../../database/firebase_data/database.dart';
+import '../../utils/constants.dart';
 
 class AddEvents extends StatefulWidget {
   const AddEvents({Key? key}) : super(key: key);
@@ -13,7 +14,7 @@ class AddEvents extends StatefulWidget {
 
 class _AddEventsState extends State<AddEvents> {
   bool submiting = false;
-  DateTime? selectedEventDate = DateTime.now();
+  DateTime selectedEventDate = DateTime.now();
   TextEditingController eventNameController = TextEditingController();
   TextEditingController team1Controller = TextEditingController();
   TextEditingController team2Controller = TextEditingController();
@@ -22,8 +23,7 @@ class _AddEventsState extends State<AddEvents> {
   TimeOfDay selectedTime = TimeOfDay(hour: 00, minute: 00);
   String selectedStartTime = "";
   String selectedEndTime = "";
-  String? _hour, _minute, _time;
-
+  String notificationTime = "";
   DataBase dataBase = DataBase();
   InputDecoration inputDecoration(String hint) {
     return InputDecoration(
@@ -82,7 +82,7 @@ class _AddEventsState extends State<AddEvents> {
                               width: 15,
                             ),
                             Text(
-                              "${selectedEventDate!.toLocal()}".split(" ")[0],
+                              "${selectedEventDate.toLocal()}".split(" ")[0],
                             )
                           ]))),
 
@@ -177,14 +177,26 @@ class _AddEventsState extends State<AddEvents> {
                               team1: team1Controller.text,
                               team2: team2Controller.text,
                               place: placeController.text,
-                              date: selectedEventDate!
+                              date: selectedEventDate
                                   .toLocal()
                                   .toString()
                                   .split(" ")[0],
                               startTime: selectedStartTime,
                               endTime: selectedEndTime,
                             )
-                                .then((value) {
+                                .then((value) async {
+                              print(notificationTime);
+                              print(notificationTime.split(" "));
+                              await FirebasePushMessaging.scheduleNotification(
+                                      title:
+                                          "${eventNameController.text} Notification",
+                                      content:
+                                          "Match ${team1Controller.text} vs ${team2Controller.text} going to start in 5 mins",
+                                      date: selectedEventDate
+                                          .toString()
+                                          .split(" ")[0],
+                                      time: notificationTime)
+                                  .then((response) => print(response));
                               Future.delayed(Duration(seconds: 2))
                                   .then((value) {
                                 ScaffoldMessenger.of(context)
@@ -291,7 +303,7 @@ class _AddEventsState extends State<AddEvents> {
   buildMaterialDatePicker(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedEventDate!,
+      initialDate: selectedEventDate,
       firstDate: DateTime.now(),
       lastDate: DateTime(2025),
       initialEntryMode: DatePickerEntryMode.calendar,
@@ -379,11 +391,18 @@ class _AddEventsState extends State<AddEvents> {
     if (picked != null)
       setState(() {
         selectedTime = picked;
-        _hour = selectedTime.hour.toString();
-        _minute = selectedTime.minute.toString();
-        _time = _hour! + ' : ' + _minute!;
         selectedStartTime = formatDate(
-            DateTime(2019, 08, 1, selectedTime.hour, selectedTime.minute),
+            DateTime(selectedEventDate.year, selectedEventDate.month,
+                selectedEventDate.day, selectedTime.hour, selectedTime.minute),
+            [hh, ':', nn, " ", am]).toString();
+        notificationTime = notificationTime = formatDate(
+            DateTime(
+                    selectedEventDate.year,
+                    selectedEventDate.month,
+                    selectedEventDate.day,
+                    selectedTime.hour,
+                    selectedTime.minute)
+                .subtract(Duration(minutes: 5)),
             [hh, ':', nn, " ", am]).toString();
       });
   }
@@ -399,11 +418,9 @@ class _AddEventsState extends State<AddEvents> {
     if (picked != null)
       setState(() {
         selectedTime = picked;
-        _hour = selectedTime.hour.toString();
-        _minute = selectedTime.minute.toString();
-        _time = _hour! + ' : ' + _minute!;
         selectedEndTime = formatDate(
-            DateTime(2019, 08, 1, selectedTime.hour, selectedTime.minute),
+            DateTime(selectedEventDate.year, selectedEventDate.month,
+                selectedEventDate.day, selectedTime.hour, selectedTime.minute),
             [hh, ':', nn, " ", am]).toString();
       });
   }

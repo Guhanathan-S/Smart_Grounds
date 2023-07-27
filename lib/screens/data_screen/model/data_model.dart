@@ -1,10 +1,10 @@
-class Data_Model {
-  Data_Model({this.data});
+class DataModel {
+  DataModel({this.data});
   List<UserData>? data;
-  factory Data_Model.fromJson(json) {
+  factory DataModel.fromJson(Map<Object?, Object?> json) {
     var datas = List.generate(json.keys.toList().length,
         (index) => [json.values.toList()[index], json.keys.toList()[index]]);
-    return Data_Model(
+    return DataModel(
         data: List<UserData>.from(datas.map((json) => UserData.fromJson(json)))
             .toList());
   }

@@ -1,9 +1,7 @@
-import 'dart:math';
-
 import 'package:firebase_database/firebase_database.dart';
-import 'package:smart_grounds/screens/bookings/booking_model.dart';
-
-import '../screens/event_screen/eventDataModel.dart';
+import '/screens/bookings/model/booking_model.dart';
+import '../../screens/event_screen/eventDataModel.dart';
+import 'userData.dart';
 
 class DataBase {
   DatabaseReference database = FirebaseDatabase.instance.ref();
@@ -124,5 +122,43 @@ class DataBase {
         }
       });
     });
+  }
+
+  /// Update Calories Details
+  Future<String> updateCalories(
+      {required int calories,
+      required int totalTime,
+      required String key}) async {
+    await database.ref
+        .child('users_data/${UserDataBase.userDetails.registerNumber}/$key')
+        .update(
+            {'calories': calories.toInt(), 'time': '${totalTime.toInt()} min'});
+    return '';
+  }
+
+  // check for device tokens and Add
+  Future<void> registerDeviceTokens(deviceToken) async {
+    print('registering the device');
+    String type = UserDataBase.userDetails.userType == 'others'
+        ? 'external_users'
+        : 'internal_users';
+    DataSnapshot dataSnapshot =
+        await database.ref.child('device_tokens/$type').get();
+    if (dataSnapshot.exists) {
+      Query query = database
+          .child('device_tokens/$type')
+          .orderByValue()
+          .equalTo(deviceToken);
+      DatabaseEvent databaseEvent = await query.once();
+      DataSnapshot snapshot = databaseEvent.snapshot;
+      print(snapshot.value);
+      if (!snapshot.exists) {
+        await database.ref.child('device_tokens/$type').push().set(deviceToken);
+      } else {
+        print("snapshot data is exists");
+      }
+    } else {
+      await database.ref.child('device_tokens/$type').push().set(deviceToken);
+    }
   }
 }
